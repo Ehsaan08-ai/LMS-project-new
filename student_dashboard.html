@@ -1,0 +1,97 @@
+#Student dashboard 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="search.html">Search Books</a>
+        <a href="profile.html">Profile</a>
+        <a href="#">My Library</a>
+        <a href="#">Account</a>
+        <a href="index.html">Logout</a>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="welcome-message" id="welcomeMessage">Welcome!</div>
+        <div class="dashboard-title">My Library Stats</div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search books..." id="searchInput">
+            <button class="search-button" onclick="searchBooks()">Search</button>
+        </div>
+
+        <div class="grid-container">
+            <div class="card">
+                <div class="icon">📚</div>
+                <div class="count">2 Books Borrowed</div>
+                <div class="label">e.g., "Book A" - Due: 03/01/2025</div>
+            </div>
+
+            <div class="card">
+                <div class="icon">🔍</div>
+                <div class="count">Search Books</div>
+                <div class="label">Find & Request Titles</div>
+            </div>
+
+            <div class="card">
+                <div class="icon">⏰</div>
+                <div class="count">1 Due Soon</div>
+                <div class="label">"Book B" - Due: 02/25/2025</div>
+            </div>
+
+            <div class="card">
+                <div class="icon">💰</div>
+                <div class="count">₹50</div>
+                <div class="label">Pending Fines</div>
+            </div>
+
+            <div class="card">
+                <div class="icon">🔄</div>
+                <div class="count">1 Requested</div>
+                <div class="label">"Book C" - Requested: 02/20/2025</div>
+            </div>
+
+            <div class="card">
+                <div class="icon">🔑</div>
+                <div class="count">Change Password</div>
+                <div class="label">Update Your Credentials</div>
+            </div>
+        </div>
+
+        <div class="announcement-container">
+            <h3>Announcements</h3>
+            <div class="announcement">Library Closed on Feb 28, 2025 for Maintenance</div>
+            <div class="announcement">New Books Added: Check the Catalog!</div>
+        </div>
+    </div>
+
+    <script>
+        const currentUserEmail = localStorage.getItem("currentUser");
+        if (!currentUserEmail) {
+            alert("Please log in first!");
+            window.location.href = "login.html";
+        } else {
+            const userData = JSON.parse(localStorage.getItem("user_" + currentUserEmail)) || {};
+            if (userData && userData.full_name) {
+                document.getElementById("welcomeMessage").textContent = "Welcome, " + userData.full_name + "!";
+            } else {
+                document.getElementById("welcomeMessage").textContent = "Welcome, Student!";
+            }
+        }
+
+        function searchBooks() {
+            const query = document.getElementById("searchInput").value;
+            alert("Searching for: " + query + " (Redirect to search page or show results here)");
+            window.location.href = "search.html?query=" + encodeURIComponent(query);
+        }
+    </script>
+</body>
+</html>

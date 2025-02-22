@@ -1,0 +1,119 @@
+#admin dashboard
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="search.html">Search Books</a>
+        <a href="profile.html">Profile</a>
+        <a href="#">Categories</a>
+        <a href="#">Publications</a>
+        <a href="#">Books</a>
+        <a href="#">Issue Books</a>
+        <a href="#">Requested Books</a>
+        <a href="#">Report</a>
+        <a href="#">Reg Students</a>
+        <a href="#">Account</a>
+        <a href="index.html">Logout</a>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="welcome-message" id="welcomeMessage">Welcome!</div>
+        <div class="dashboard-title">Admin Dashboard</div>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search books..." id="searchInput">
+            <button class="search-button" onclick="searchBooks()">Search</button>
+        </div>
+
+        <div class="admin-grid-container">
+            <div class="card admin-card card-books">
+                <div class="icon">📚</div>
+                <div class="count">4</div>
+                <div class="label">Books Listed</div>
+            </div>
+
+            <div class="card admin-card card-issued">
+                <div class="icon">📖</div>
+                <div class="count">10</div>
+                <div class="label">Times Books Issued</div>
+            </div>
+
+            <div class="card admin-card card-returned">
+                <div class="icon">♻️</div>
+                <div class="count">5</div>
+                <div class="label">Times Books Returned</div>
+            </div>
+
+            <div class="card admin-card card-users">
+                <div class="icon">👥</div>
+                <div class="count">6</div>
+                <div class="label">Registered Users</div>
+            </div>
+
+            <div class="card admin-card card-publications">
+                <div class="icon">📝</div>
+                <div class="count">3</div>
+                <div class="label">Publications Listed</div>
+            </div>
+
+            <div class="card admin-card card-categories">
+                <div class="icon">📂</div>
+                <div class="count">7</div>
+                <div class="label">Listed Categories</div>
+            </div>
+
+            <div class="card admin-card card-fine">
+                <div class="icon">💰</div>
+                <div class="count">10</div>
+                <div class="label">Current Fine Per Day</div>
+            </div>
+        </div>
+
+        <div class="announcement-container">
+            <h3>Announcements</h3>
+            <div class="announcement">Library Closed on Feb 28, 2025 for Maintenance</div>
+            <div class="announcement">New Books Added: Check the Catalog!</div>
+        </div>
+
+        <div class="user-management-container">
+            <h3>Manage Users</h3>
+            <button onclick="manageUsers()">View Registered Students</button>
+        </div>
+    </div>
+
+    <script>
+        const currentUserEmail = localStorage.getItem("currentUser");
+        if (!currentUserEmail) {
+            alert("Please log in first!");
+            window.location.href = "login.html";
+        } else {
+            const userData = JSON.parse(localStorage.getItem("user_" + currentUserEmail)) || {};
+            if (userData && userData.full_name) {
+                document.getElementById("welcomeMessage").textContent = "Welcome, " + userData.full_name + "!";
+            } else {
+                document.getElementById("welcomeMessage").textContent = "Welcome, Admin!";
+            }
+        }
+
+        function searchBooks() {
+            const query = document.getElementById("searchInput").value;
+            alert("Searching for: " + query + " (Redirect to search page or show results here)");
+            window.location.href = "search.html?query=" + encodeURIComponent(query);
+        }
+
+        function manageUsers() {
+            alert("View registered students and admins (mock data):\n- Jane Smith (Student)\n- Admin User (Admin)");
+            // In real implementation, fetch from backend or localStorage
+        }
+    </script>
+</body>
+</html>

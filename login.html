@@ -1,0 +1,71 @@
+#Login page
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCMIRT Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="search.html">Search Books</a>
+        <a href="profile.html">Profile</a>
+        <a href="#">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+    <div class="container">
+        <h2>SCMIRT Library Login</h2>
+        <form action="#" method="POST" onsubmit="return handleLogin(event)">
+            <label for="role">Login as:</label>
+            <select id="role" name="role">
+                <option value="student">Student</option>
+                <option value="admin">Admin</option>
+            </select>
+            <input type="text" name="username" placeholder="Email ID" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <a href="signup.html" class="signup-link">Don't have an account? Sign Up</a>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const role = document.getElementById("role").value;
+            const username = document.querySelector('input[name="username"]').value;
+            const password = document.querySelector('input[name="password"]').value;
+
+            console.log("Attempting login with role:", role, "username:", username, "password:", password);
+
+            const storedUser = localStorage.getItem("user_" + username);
+            if (storedUser) {
+                const userData = JSON.parse(storedUser);
+                console.log("Found user data:", userData);
+
+                if (userData.password === password) {
+                    if (role === "student" && userData.course !== "admin") {
+                        console.log("Student login successful");
+                        localStorage.setItem("currentUser", username);
+                        window.location.href = "student_dashboard.html";
+                    } else if (role === "admin" && userData.course === "admin") {
+                        console.log("Admin login successful");
+                        localStorage.setItem("currentUser", username);
+                        window.location.href = "admin_dashboard.html";
+                    } else {
+                        alert("Invalid role! Please select the correct role for this user.");
+                    }
+                } else {
+                    alert("Invalid password!");
+                }
+            } else {
+                alert("User not found! Please sign up first.");
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>

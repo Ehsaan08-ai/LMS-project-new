@@ -1,0 +1,97 @@
+#profile page
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - SCMIRT Library</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="search.html">Search Books</a>
+        <a href="#">Profile</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+    <div class="profile-container">
+        <h2>My Profile</h2>
+        <div class="profile-field">
+            <div class="profile-label">Full Name:</div>
+            <input type="text" class="profile-input" id="fullName" readonly>
+        </div>
+        <div class="profile-field">
+            <div class="profile-label">Email:</div>
+            <input type="email" class="profile-input" id="email" readonly>
+        </div>
+        <div class="profile-field">
+            <div class="profile-label">Contact Number:</div>
+            <input type="tel" class="profile-input" id="contactNumber">
+        </div>
+        <div class="profile-field">
+            <div class="profile-label">Role/Course:</div>
+            <input type="text" class="profile-input" id="course" readonly>
+        </div>
+        <button onclick="editProfile()">Edit</button>
+        <button onclick="saveProfile()" style="display: none;" id="saveButton">Save</button>
+        <button onclick="changePassword()">Change Password</button>
+    </div>
+
+    <script>
+        const currentUserEmail = localStorage.getItem("currentUser");
+        if (!currentUserEmail) {
+            alert("Please log in first!");
+            window.location.href = "login.html";
+        } else {
+            const userData = JSON.parse(localStorage.getItem("user_" + currentUserEmail)) || {};
+            document.getElementById("fullName").value = userData.full_name || "Not set";
+            document.getElementById("email").value = currentUserEmail;
+            document.getElementById("contactNumber").value = userData.contact_number || "";
+            document.getElementById("course").value = userData.course || "Student";
+        }
+
+        let isEditing = false;
+        function editProfile() {
+            if (!isEditing) {
+                document.getElementById("fullName").removeAttribute("readonly");
+                document.getElementById("contactNumber").removeAttribute("readonly");
+                document.getElementById("saveButton").style.display = "inline";
+                document.getElementById("editButton").style.display = "none";
+                isEditing = true;
+            }
+        }
+
+        function saveProfile() {
+            const currentUserEmail = localStorage.getItem("currentUser");
+            if (currentUserEmail) {
+                const userData = JSON.parse(localStorage.getItem("user_" + currentUserEmail)) || {};
+                userData.full_name = document.getElementById("fullName").value;
+                userData.contact_number = document.getElementById("contactNumber").value;
+                localStorage.setItem("user_" + currentUserEmail, JSON.stringify(userData));
+                alert("Profile updated successfully!");
+                document.getElementById("fullName").setAttribute("readonly", "readonly");
+                document.getElementById("contactNumber").setAttribute("readonly", "readonly");
+                document.getElementById("saveButton").style.display = "none";
+                document.getElementById("editButton").style.display = "inline";
+                isEditing = false;
+            }
+        }
+
+        function changePassword() {
+            const newPassword = prompt("Enter new password:");
+            if (newPassword) {
+                const currentUserEmail = localStorage.getItem("currentUser");
+                if (currentUserEmail) {
+                    const userData = JSON.parse(localStorage.getItem("user_" + currentUserEmail)) || {};
+                    userData.password = newPassword;
+                    localStorage.setItem("user_" + currentUserEmail, JSON.stringify(userData));
+                    alert("Password changed successfully!");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

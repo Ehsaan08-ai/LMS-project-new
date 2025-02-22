@@ -1,0 +1,113 @@
+#Book search page
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Books - SCMIRT Library</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="#">Search Books</a>
+        <a href="profile.html">Profile</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+
+    <div class="dashboard-container">
+        <h2>Search Books</h2>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search by title, author, or ISBN..." id="searchInput">
+            <button class="search-button" onclick="searchBooks()">Search</button>
+        </div>
+
+        <div class="filter-container">
+            <select class="search-input" id="categoryFilter">
+                <option value="">All Categories</option>
+                <option value="Fiction">Fiction</option>
+                <option value="Science">Science</option>
+                <option value="Technology">Technology</option>
+            </select>
+            <select class="search-input" id="availabilityFilter">
+                <option value="">All Availability</option>
+                <option value="Available">Available</option>
+                <option value="Borrowed">Borrowed</option>
+            </select>
+        </div>
+
+        <div id="searchResults" class="grid-container">
+            <!-- Mock results -->
+            <div class="card">
+                <h3>Book Title 1</h3>
+                <p>Author: John Doe</p>
+                <p>Category: Fiction | Available</p>
+                <button onclick="requestBook('Book Title 1')">Request</button>
+            </div>
+            <div class="card">
+                <h3>Book Title 2</h3>
+                <p>Author: Jane Smith</p>
+                <p>Category: Science | Borrowed</p>
+                <button onclick="requestBook('Book Title 2')" disabled>Request</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchBooks() {
+            const query = document.getElementById("searchInput").value;
+            const category = document.getElementById("categoryFilter").value;
+            const availability = document.getElementById("availabilityFilter").value;
+            const results = document.getElementById("searchResults");
+
+            // Mock search logic (replace with backend API in real implementation)
+            results.innerHTML = "";
+            const mockBooks = [
+                { title: "Book Title 1", author: "John Doe", category: "Fiction", available: true },
+                { title: "Book Title 2", author: "Jane Smith", category: "Science", available: false },
+                { title: "Book Title 3", author: "Alice Brown", category: "Technology", available: true }
+            ];
+
+            mockBooks.filter(book => 
+                book.title.toLowerCase().includes(query.toLowerCase()) &&
+                (category === "" || book.category === category) &&
+                (availability === "" || (book.available && availability === "Available") || (!book.available && availability === "Borrowed"))
+            ).forEach(book => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                    <h3>${book.title}</h3>
+                    <p>Author: ${book.author}</p>
+                    <p>Category: ${book.category} | ${book.available ? "Available" : "Borrowed"}</p>
+                    <button onclick="requestBook('${book.title}')" ${!book.available ? "disabled" : ""}>Request</button>
+                `;
+                results.appendChild(card);
+            });
+        }
+
+        function requestBook(title) {
+            alert(`Book requested: ${title}`);
+            // In real implementation, store in localStorage or send to backend
+            const currentUser = localStorage.getItem("currentUser");
+            if (currentUser) {
+                const userData = JSON.parse(localStorage.getItem("user_" + currentUser)) || {};
+                userData.requests = userData.requests || [];
+                userData.requests.push(title);
+                localStorage.setItem("user_" + currentUser, JSON.stringify(userData));
+            }
+        }
+
+        // Trigger search on page load with URL query (if any)
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get("query");
+            if (query) {
+                document.getElementById("searchInput").value = decodeURIComponent(query);
+                searchBooks();
+            }
+        };
+    </script>
+</body>
+</html>
